@@ -8,13 +8,19 @@ import sys
 import numpy as np
 import random
 import math
-from glm import ivec2, ivec3
-from gdpc import __url__, Editor, Block, geometry
+from glm import ivec3, vec3
+from gdpc import __url__, Editor, Block, geometry, Box, nbt_tools
 from gdpc.exceptions import InterfaceConnectionError
-
-from node import Node
-from attractor import Attractor
-from utils import SCREEN_HEIGHT, SCREEN_WIDTH
+from tree import Tree
+import argparse
+from utils import AREA
+from wall import generate_wall
+from spider import generate_leg
+import requests
+import json
+import nbtlib
+from deforest import deforest
+import time
 
 # Create an editor object.
 # The Editor class provides a high-level interface to interact with the Minecraft world.
@@ -42,25 +48,15 @@ except InterfaceConnectionError:
 # block = editor.getBlock((0, 80, 0))
 # print(f"Block at (0,80,0): {block}")
 
-# Create the initial nodes and attractors
-nodes = [Node(editor, ivec2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))]
-attractors = [
-    Attractor(
-        editor,
-        ivec2(random.randint(0, SCREEN_WIDTH), random.randint(0, SCREEN_HEIGHT)),
-        random.randint(1, 5),
-    )
-    for i in range(20)
-]
-attractor_positions = [attractor.position for attractor in attractors]
+floor_height = 40
 
 
-# Update the positions of the nodes
-for node in nodes:
-    node.update_position(nodes, attractor_positions)
+def main():
+    start_time = time.time()
+    # deforest(Editor())
+    requests.get("http://localhost:9000/deforest")
+    print(time.time() - start_time)
 
-# Draw the nodes and attractors
-for attractor in attractors:
-    attractor.draw()
-for node in nodes:
-    node.draw()
+
+if __name__ == "__main__":
+    main()
